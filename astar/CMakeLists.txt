@@ -12,6 +12,19 @@ find_package(visualization_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 
+add_executable(astar_node src/astar_node.cpp)
+target_include_directories(astar_node PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+
+ament_target_dependencies( astar_node rclcpp visualization_msgs)
+
+install(TARGETS
+  astar_node
+  DESTINATION lib/${PROJECT_NAME})
+
+install(DIRECTORY launch rviz
+  DESTINATION share/${PROJECT_NAME})
+
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   # the following line skips the linter which checks for copyrights
