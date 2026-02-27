@@ -2,6 +2,9 @@
 #include "visualization_msgs/msg/marker_array.hpp"
 #include "visualization_msgs/msg/marker.hpp"
 #include "astar/grid.hpp"
+#include "astar/astar.hpp"
+#include <vector>
+#include <utility>
 
 using namespace std::chrono_literals;
 
@@ -21,6 +24,11 @@ class AstarNode : public rclcpp::Node
     grid_->get(1,1).state = astar::CellState::START;
     grid_->get(17,19).state = astar::CellState::GOAL;
     
+    std::vector<std::pair<int,int>> path = run_astar(*grid_, 1, 1, 17, 19);
+    for (auto pair : path)
+    {
+	 grid_->get(pair.first,pair.second).state = astar::CellState::PATH;
+    }	 
   }
 
   private:
