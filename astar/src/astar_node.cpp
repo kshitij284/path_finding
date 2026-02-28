@@ -20,23 +20,49 @@ class AstarNode : public rclcpp::Node
     grid_->set_obstacle_rectangle(4,4,4,11);
     grid_->set_obstacle_rectangle(10,7,15,7);
     grid_->set_obstacle_rectangle(14,1,14,6);
-
-    grid_->get(1,1).state = astar::CellState::START;
-    grid_->get(17,19).state = astar::CellState::GOAL;
     
-    std::vector<std::pair<int,int>> path = run_astar(*grid_, 1, 1, 17, 19);
+    grid_->get(start_x_,start_y_).state = astar::CellState::START;
+    grid_->get(goal_x_,goal_y_).state = astar::CellState::GOAL;
+
+    astar::Cell start_cell;
+    start_cell.x = start_x_;
+    start_cell.y = start_y_;
+    start_cell.state = astar::CellState::START;
+    start_cell.g = 0.0f;
+    start_cell.h = astar::Grid::heuristic(start_x_, start_y_, goal_x_, goal_y_);
+    start_cell.f = start_cell.g + start_cell.h;
+    open_set_.push(start_cell);
+    
+    /*std::vector<std::pair<int,int>> path = run_astar(*grid_, 1, 1, 17, 19);
     for (auto pair : path)
     {
 	 grid_->get(pair.first,pair.second).state = astar::CellState::PATH;
-    }	 
+    }*/     
   }
 
   private:
   rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr publisher_;
   rclcpp::TimerBase::SharedPtr timer_;
   std::unique_ptr<astar::Grid> grid_;
+  std::priority_queue<astar::Cell, std::vector<astar::Cell>, std::greater<astar::Cell>> open_set_;
+  std::set<std::pair<int,int>> closed_set_;
+  bool search_complete = false;
+  int start_x_ = 1;
+  int start_y_ = 1;
+  int goal_x_ = 17;
+  int goal_y_ = 19;
+
   void publish_grid()
-  {
+  { 
+    if(!search_complete)
+    {  std::vector<std::pair<int,int>> path = step_astar(*grid_, open_set_, closed_set_, goal_x_, goal_y_);
+       if(!path.empty())
+       {  for(auto p : path)
+	  { grid_ ->get(p.first, p.second).state = astar::CellState::PATH ; }
+	  search_complete = true;
+       }
+    }
+
     visualization_msgs::msg::MarkerArray msg;
     int id = 0;
     for(int y = 0; y < grid_->height; y++)
