@@ -5,14 +5,14 @@
 #include "astar/astar.hpp"
 #include <vector>
 #include <utility>
-
 using namespace std::chrono_literals;
 
 class AstarNode : public rclcpp::Node
 {
   public:
   AstarNode():Node("astar_node")
-  {
+  { 
+    
     this->declare_parameter("goal_x",17);
     this->declare_parameter("goal_y",19);
     goal_x_ = this->get_parameter("goal_x").as_int();
