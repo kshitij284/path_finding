@@ -35,9 +35,9 @@ std::vector<std::pair<int,int>> run_astar(astar::Grid& grid, int start_x, int st
       {
         const astar::Cell path_cell = grid.get(parent_x_now, parent_y_now);
         std::pair<int,int> parent_now = {parent_x_now, parent_y_now};
-	path.push_back(parent_now);
-	parent_x_now = path_cell.parent_x;
-	parent_y_now = path_cell.parent_y;
+	    path.push_back(parent_now);
+	    parent_x_now = path_cell.parent_x;
+	    parent_y_now = path_cell.parent_y;
       }
     std::reverse(path.begin(), path.end());
     return path;
@@ -90,9 +90,9 @@ std::vector<std::pair<int,int>> step_astar(astar::Grid& grid,std::priority_queue
       {
         const astar::Cell path_cell = grid.get(parent_x_now, parent_y_now);
         std::pair<int,int> parent_now = {parent_x_now, parent_y_now};
-	path.push_back(parent_now);
-	parent_x_now = path_cell.parent_x;
-	parent_y_now = path_cell.parent_y;
+	    path.push_back(parent_now);
+	    parent_x_now = path_cell.parent_x;
+	    parent_y_now = path_cell.parent_y;
       }
       std::reverse(path.begin(), path.end());
       return path;
