@@ -13,8 +13,13 @@ class AstarNode : public rclcpp::Node
   public:
   AstarNode():Node("astar_node")
   {
+    this->declare_parameter("goal_x",17);
+    this->declare_parameter("goal_y",19);
+    goal_x_ = this->get_parameter("goal_x").as_int();
+    goal_y_ = this->get_parameter("goal_y").as_int();
+    
     publisher_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("/grid_marker",10);
-    timer_ = this->create_wall_timer(500ms,[this](){this->publish_grid();});
+    timer_ = this->create_wall_timer(100ms,[this](){this->publish_grid();});
 
     grid_ = std::make_unique<astar::Grid>(20,20);
     grid_->set_obstacle_rectangle(4,4,4,11);
