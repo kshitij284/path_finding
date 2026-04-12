@@ -5,7 +5,7 @@
 #include "grid.hpp"
 #include <algorithm>
 
-std::vector<std::pair<int,int>> run_astar(astar::Grid& grid, int start_x, int start_y, int goal_x, int goal_y,bool allow_diagonal = false)
+std::vector<std::pair<int,int>> run_astar(astar::Grid& grid, int start_x, int start_y, int goal_x, int goal_y, bool allow_diagonal = false)
 {
   astar::Cell start_cell;
   start_cell.x = start_x;
@@ -50,11 +50,11 @@ std::vector<std::pair<int,int>> run_astar(astar::Grid& grid, int start_x, int st
         { 1, 0}, {-1, 0}, { 0, 1}, { 0,-1},   // cardinal
       };
       if(allow_diagonal) {
-	    side_update.push_back({1,1});
-	    side_update.push_back({1,-1});
-	    side_update.push_back({-1,1});
-	    side_update.push_back({-1,-1});
-	}
+        side_update.push_back({1,1});
+        side_update.push_back({1,-1});
+        side_update.push_back({-1,1});
+        side_update.push_back({-1,-1});
+      }
 
       for(auto neighbor : side_update)
       {
@@ -67,10 +67,8 @@ std::vector<std::pair<int,int>> run_astar(astar::Grid& grid, int start_x, int st
 
           if(grid.is_walkable(neighbor_cell_x, neighbor_cell_y) && !closed_set.count({neighbor_cell_x, neighbor_cell_y}))
           {
-            // check if diagonal move
             bool is_diagonal = (neighbor.first != 0 && neighbor.second != 0);
 
-            // block corner cutting through walls
             if(is_diagonal)
             {
               bool x_blocked = !grid.is_walkable(current_cell.x + neighbor.first, current_cell.y);
@@ -133,11 +131,11 @@ std::vector<std::pair<int,int>> step_astar(
     { 1, 0}, {-1, 0}, { 0, 1}, { 0,-1},   // cardinal
   };
   if(allow_diagonal) {
-	    side_update.push_back({1,1});
-	    side_update.push_back({1,-1});
-	    side_update.push_back({-1,1});
-	    side_update.push_back({-1,-1});
-	}
+    side_update.push_back({1,1});
+    side_update.push_back({1,-1});
+    side_update.push_back({-1,1});
+    side_update.push_back({-1,-1});
+  }
 
   for(auto side : side_update)
   {
@@ -173,4 +171,3 @@ std::vector<std::pair<int,int>> step_astar(
   }
   return {};
 }
-
