@@ -5,7 +5,7 @@
 #include "grid.hpp"
 #include <algorithm>
 
-std::vector<std::pair<int,int>> run_astar(astar::Grid& grid, int start_x, int start_y, int goal_x, int goal_y)
+std::vector<std::pair<int,int>> run_astar(astar::Grid& grid, int start_x, int start_y, int goal_x, int goal_y,bool allow_diagonal = false)
 {
   astar::Cell start_cell;
   start_cell.x = start_x;
@@ -48,8 +48,13 @@ std::vector<std::pair<int,int>> run_astar(astar::Grid& grid, int start_x, int st
 
       std::vector<std::pair<int,int>> side_update = {
         { 1, 0}, {-1, 0}, { 0, 1}, { 0,-1},   // cardinal
-        { 1, 1}, { 1,-1}, {-1, 1}, {-1,-1}    // diagonal
       };
+      if(allow_diagonal) {
+	    side_update.push_back({1,1});
+	    side_update.push_back({1,-1});
+	    side_update.push_back({-1,1});
+	    side_update.push_back({-1,-1});
+	}
 
       for(auto neighbor : side_update)
       {
@@ -94,7 +99,7 @@ std::vector<std::pair<int,int>> step_astar(
   astar::Grid& grid,
   std::priority_queue<astar::Cell, std::vector<astar::Cell>, std::greater<astar::Cell>>& open_set,
   std::set<std::pair<int,int>>& closed_set,
-  int goal_x, int goal_y)
+  int goal_x, int goal_y, bool allow_diagonal = false)
 {
   if(open_set.empty()) { return {}; }
 
@@ -126,8 +131,13 @@ std::vector<std::pair<int,int>> step_astar(
 
   std::vector<std::pair<int,int>> side_update = {
     { 1, 0}, {-1, 0}, { 0, 1}, { 0,-1},   // cardinal
-    { 1, 1}, { 1,-1}, {-1, 1}, {-1,-1}    // diagonal
   };
+  if(allow_diagonal) {
+	    side_update.push_back({1,1});
+	    side_update.push_back({1,-1});
+	    side_update.push_back({-1,1});
+	    side_update.push_back({-1,-1});
+	}
 
   for(auto side : side_update)
   {
