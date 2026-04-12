@@ -17,7 +17,9 @@ class AstarNode : public rclcpp::Node
     this->declare_parameter("goal_y",19);
     goal_x_ = this->get_parameter("goal_x").as_int();
     goal_y_ = this->get_parameter("goal_y").as_int();
-    
+    this->declare_parameter("allow_diagonal", false);
+    allow_diagonal_ = this->get_parameter("allow_diagonal").as_bool();
+ 
     publisher_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("/grid_marker",10);
     timer_ = this->create_wall_timer(100ms,[this](){this->publish_grid();});
 
@@ -56,11 +58,12 @@ class AstarNode : public rclcpp::Node
   int start_y_ = 1;
   int goal_x_ = 17;
   int goal_y_ = 19;
+  bool allow_diagonal_ = false;
 
   void publish_grid()
   { 
     if(!search_complete)
-    {  std::vector<std::pair<int,int>> path = step_astar(*grid_, open_set_, closed_set_, goal_x_, goal_y_);
+    {  std::vector<std::pair<int,int>> path = step_astar(*grid_, open_set_, closed_set_, goal_x_, goal_y_, allow_diagonal_);
        if(!path.empty())
        {  for(auto p : path)
 	  { grid_ ->get(p.first, p.second).state = astar::CellState::PATH ; }
